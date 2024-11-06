@@ -47,5 +47,22 @@ func insertIntoDatabase(allCocktails []*Cocktail) {
 	db := setupDatabase()
 	defer db.Close()
 
-	// TODO
+	for _, cocktail := range allCocktails {
+		result, err := db.Exec(`INSERT INTO cocktails (name) VALUES (?)`, cocktail.Name)
+		if err != nil {
+			log.Fatal(err)
+		}
+		cocktailID, err := result.LastInsertId()
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		for _, instruction := range cocktail.Ingredients {
+			// Zutat in die Datenbank einfügen
+			_, err := db.Exec(`INSERT INTO ingredients (cocktail_id, amount, name) VALUES (?, ?, ?)`, cocktailID, instruction.AmountCL, instruction.Name)
+			if err != nil {
+				log.Fatal(err)
+			}
+		}
+	}
 }
