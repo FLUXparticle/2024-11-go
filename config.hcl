@@ -1,0 +1,9 @@
+server {
+  port = 8080
+  host = "localhost"
+}
+
+database {
+  user = "admin"
+  password = "secret"
+}
